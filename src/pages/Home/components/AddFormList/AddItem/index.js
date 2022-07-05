@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React from 'react'
 import { DeleteOutlined } from '@ant-design/icons'
 import './index.less'
 const AddItem = ({ onDelete, index, children, name }) => {
