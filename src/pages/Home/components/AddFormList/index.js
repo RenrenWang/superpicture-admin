@@ -2,7 +2,7 @@
  *  动态添加表单
  *
  */
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import AddItem from './AddItem'
 import './index.less'
 import { PlusOutlined } from '@ant-design/icons'
@@ -10,17 +10,21 @@ import { Button, Input } from 'antd'
 
 const AddList = ({ max = 4, name, onChange, defaultValue = [] }) => {
   const [list, setList] = useState([])
+  const firstRef = useRef(true)
   useEffect(() => {
-    let valus = []
-    defaultValue &&
-      defaultValue.map((item, index) => {
-        valus.push({
-          key: `${name}-${index}`,
-          [name]: item,
+    if (defaultValue && defaultValue.length && firstRef.current) {
+      let valus = []
+      defaultValue &&
+        defaultValue.map((item, index) => {
+          valus.push({
+            key: `${name}-${index}`,
+            [name]: item,
+          })
         })
-      })
-    setList([...valus])
-  }, [])
+      firstRef.current = false
+      setList([...valus])
+    }
+  }, [defaultValue])
   //数据组装
   const onFinish = useCallback(() => {
     const result = []
@@ -32,6 +36,7 @@ const AddList = ({ max = 4, name, onChange, defaultValue = [] }) => {
     onChange && onChange(newResult)
   }, [list])
   useEffect(() => {
+    console.log(list)
     onFinish()
   }, [list])
   // 添加内容
@@ -63,6 +68,7 @@ const AddList = ({ max = 4, name, onChange, defaultValue = [] }) => {
     newList[index][name] = e.target.value
     setList([...newList])
   }
+
   return (
     <div>
       {list.map((item, index) => (
