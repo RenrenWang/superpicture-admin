@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-eslint ./src --fix
-eslint ./src --max-warnings 0 
+eslint ./src --ext
+
 
