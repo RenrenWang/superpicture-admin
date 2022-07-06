@@ -48,19 +48,36 @@ module.exports = {
             loader: 'css-loader',
             options: {
               modules: {
+                // css 模块化
+                auto: resourcePath => {
+                  //排除 antd样式
+                  if (/antd/.test(resourcePath)) {
+                    return false
+                  }
+                  return true
+                },
                 localIdentName: '[name]_[local]-[hash:base64:5]',
               },
             },
           },
           {
             loader: 'less-loader',
-            options: { lessOptions: { javascriptEnabled: true } },
+            options: {
+              lessOptions: {
+                //主题样式配置
+                modifyVars: {
+                  'primary-color': '#f00',
+                  'link-color': '#1DA57A',
+                  'border-radius-base': '2px',
+                },
+                javascriptEnabled: true, // antd 报错
+              },
+            },
           },
         ],
         include: [
           path.resolve(__dirname, './src'),
           path.resolve(__dirname, './node_modules/antd'),
-
           path.resolve(__dirname, './node_modules/@ant-design/'),
         ],
       },
@@ -72,6 +89,18 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-typescript', '@babel/preset-react'],
+              plugins: [
+                [
+                  'import',
+                  {
+                    libraryName: 'antd',
+                    customStyleName: name => {
+                      //antd按需加载对应的模块（方便css-loader排除css不做模块化处理）
+                      return `antd/lib/${name}/style/index.less`
+                    },
+                  },
+                ],
+              ],
             },
           },
         ],

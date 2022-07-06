@@ -4,7 +4,7 @@
  */
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import AddItem from './AddItem'
-import './index.less'
+import styles from './index.less'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Input } from 'antd'
 
@@ -13,7 +13,7 @@ const AddList = ({ max = 4, name, onChange, defaultValue = [] }) => {
   const firstRef = useRef(true)
   useEffect(() => {
     if (defaultValue && defaultValue.length && firstRef.current) {
-      let valus = []
+      const valus = []
       defaultValue &&
         defaultValue.map((item, index) => {
           valus.push({
@@ -76,7 +76,7 @@ const AddList = ({ max = 4, name, onChange, defaultValue = [] }) => {
           <Input defaultValue={item?.[name]} onChange={e => onInput(e, index)}></Input>
         </AddItem>
       ))}
-      <div className='item-add-button'>
+      <div className={styles.itemSubmit}>
         <Button onClick={onAdd} type='dashed' block size='large' icon={<PlusOutlined />}>
           Add More
         </Button>
