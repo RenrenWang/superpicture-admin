@@ -94,10 +94,11 @@ module.exports = {
                   'import',
                   {
                     libraryName: 'antd',
-                    customStyleName: name => {
-                      //antd按需加载对应的模块（方便css-loader排除css不做模块化处理）
-                      return `antd/lib/${name}/style/index.less`
-                    },
+                    style: true,
+                    // customStyleName: name => {
+                    //   //antd按需加载对应的模块（方便css-loader排除css不做模块化处理）
+                    //   return `antd/lib/${name}/style/index.less`
+                    // },
                   },
                 ],
               ],
