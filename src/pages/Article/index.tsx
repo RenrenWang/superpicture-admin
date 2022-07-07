@@ -1,7 +1,8 @@
-import React from 'react'
-import { Space, Table, Tag } from 'antd'
+import React,{useEffect,useState} from 'react'
+import { Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import Container from '@components/Container'
+import {getArticle} from './api'
 interface DataType {
   key: string
   name: string
@@ -12,40 +13,30 @@ interface DataType {
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a>{text}</a>,
+    title: 'title',
+    dataIndex: 'title',
+    key: 'title',
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: 'describe',
+    dataIndex: 'describe',
+    key: 'describe',
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    title: 'coverImg',
+    dataIndex: 'coverImg',
+    key: 'coverImg',
   },
   {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green'
-          if (tag === 'loser') {
-            color = 'volcano'
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          )
-        })}
-      </>
-    ),
+    title: 'status',
+    dataIndex: 'status',
+    key: 'status',
+  },
+  {
+    title: 'keywords',
+    key: 'keywords',
+    dataIndex: 'keywords',
+  
   },
   {
     title: 'Action',
@@ -59,33 +50,36 @@ const columns: ColumnsType<DataType> = [
   },
 ]
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-]
+
 const Article: React.FC = () => {
+  const [data,setData]=useState()
+  const getData = async(page=1) => {
+   const {code,data} = await getArticle({
+        page,
+        pageSize:10
+   })
+    console.log(code,data)
+    if (code === 200) {
+       setData(data)
+    }
+  }
+  const onChange = (page) => {
+    getData(page)
+  }
+  useEffect(() => {
+     getData()
+  },[])
   return (
     <Container>
-      <Table columns={columns} dataSource={data} />
+      <Table
+        pagination={{  // 分页
+          current: data?.page,
+          total: data?.count,
+          onChange: onChange,
+          pageSize:10,
+        }}
+        columns={columns}
+        dataSource={data?.list} />
     </Container>
   )
 }

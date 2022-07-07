@@ -14,12 +14,13 @@ const webpackDev = {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
-
+    proxy: {
+      '/api': 'http://127.0.0.1:7001',
+    },
     // 启动gzip压缩
     compress: true,
     // 端口号
     port: 5000,
-    // 域名
     // 自动打开浏览器
     open: true,
     // 开启HMR功能
